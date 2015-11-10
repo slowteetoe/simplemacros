@@ -1,0 +1,147 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SimpleMacros</title>
+  <meta name="description" content="Figure out what your daily macros are">
+  <meta name="author" content="Steven Lotito">
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX" crossorigin="anonymous">
+
+</head>
+
+<body>
+	<div class="container">
+
+      <div class="starter-template">
+        <h1>SimpleMacros</h1>
+        <p class="lead">Visualize your daily nutrition.</p>
+      </div>
+      <div id="comparison"></div>
+      <div class="row">
+		<table class="table table-bordered">
+		    <thead>
+		      <tr>
+		      	<th>Food</th>
+		      	<th>Calories</th>
+		        <th>Protein</th>
+		        <th>Carbs</th>
+		        <th>Fats</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      <tr>
+		      	<td>Egg McMuffin (McDonalds)</td>
+		      	<td>300</td>
+		        <td>17g</td>
+		        <td>29g</td>
+		        <td>12g</td>
+		      </tr>
+		      <tr>
+		      	<td>Protein Shake (1 scoop whey isolate)</td>
+		      	<td>130</td>
+		        <td>26g</td>
+		        <td>2g</td>
+		        <td>3.5g</td>
+		      </tr>
+		      <tr>
+		      	<td>Something else...</td>
+		      	<td>1000</td>
+		        <td>26g</td>
+		        <td>200g</td>
+		        <td>32g</td>
+		      </tr>
+		    </tbody>
+		  </table>
+		</div>
+    </div>
+    	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+    <script type="text/javascript">
+<!-- Data for bar chart: Two time-series, alternating to form a single series. Bar Color will switch back & forth -->
+var data = d3.range(10).map(Math.random);
+var data = [40, 20, 40, 55, 20, 25];
+var colorlist = ["gray", "darkblue"];
+var labellist = ["Protein", "", "Carbs", "", "Fats", ""];
+
+var w = 815,
+    h = 260,
+    labelpad = 165,
+    x = d3.scale.linear().domain([0, 100]).range([0, w]),
+    y = d3.scale.ordinal().domain(d3.range(data.length)).rangeBands([0, h], .2);
+
+var vis = d3.select("#comparison")
+  .append("svg:svg")
+    .attr("width", w + 40)
+    .attr("height", h + 20)
+  .append("svg:g")
+    .attr("transform", "translate(20,0)");
+
+var bars = vis.selectAll("g.bar")
+    .data(data)
+  .enter().append("svg:g")
+    .attr("class", "bar")
+    .attr("transform", function(d, i) { return "translate(" + labelpad + "," + y(i) + ")"; });
+
+bars.append("svg:rect")
+    .attr("fill", function(d, i) { return colorlist[i % 2]; } )   //Alternate colors
+    .attr("width", x)
+    .attr("height", y.rangeBand());
+
+bars.append("svg:text")
+    .attr("x", 0)
+    .attr("y", 10 + y.rangeBand() / 2)
+    .attr("dx", -6)
+    .attr("dy", ".35em")
+    .attr("text-anchor", "end")
+    .text(function(d, i) { return labellist[i]; });
+
+
+var rules = vis.selectAll("g.rule")
+    .data(x.ticks(10))
+  .enter().append("svg:g")
+    .attr("class", "rule")
+    .attr("transform", function(d) { return "translate(" + x(d) + ", 0)"; });
+
+rules.append("svg:line")
+    .attr("y1", h)
+    .attr("y2", h + 6)
+    .attr("x1", labelpad)
+    .attr("x2", labelpad)
+    .attr("stroke", "black");
+
+rules.append("svg:line")
+    .attr("y1", 0)
+    .attr("y2", h)
+    .attr("x1", labelpad)
+    .attr("x2", labelpad)
+    .attr("stroke", "white")
+    .attr("stroke-opacity", .3);
+
+
+rules.append("svg:text")
+    .attr("y", h + 8)
+    .attr("x", labelpad)
+    .attr("dy", ".71em")
+    .attr("text-anchor", "middle")
+    .text(x.tickFormat(10));
+
+    </script>
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+
+</body>
+</html>
